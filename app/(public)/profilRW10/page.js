@@ -41,7 +41,7 @@ export default async function ProfilRW10Page() {
 
           <h3 className="text-xl font-bold text-gray-900 mt-10 mb-2">Visi</h3>
           <p className="text-justify font-bold pl-4 leading-relaxed text-gray-800">
-            "{data.visi}"
+            &quot;{data.visi}&quot;
           </p>
 
           <h3 className="text-xl font-bold text-gray-900 mt-10 mb-2">Misi</h3>
