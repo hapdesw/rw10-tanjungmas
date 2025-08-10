@@ -28,12 +28,12 @@ export default async function ProfilKWTPage() {
 
           <div className="max-w-md mx-auto px-4 pb-2 md:pb-5">
             <img
-              src="/images/bsmt.jpg"
+              src="/images/kwt.jpg"
               alt="Kantor BSMT"
               className="hidden md:block w-full object-cover rounded-xl"
             />
             <img
-              src="/images/bsmt.jpg"
+              src="/images/kwt.jpg"
               alt="Kantor BSMT"
               className="block md:hidden w-full object-cover rounded-xl"
             />
@@ -56,28 +56,26 @@ export default async function ProfilKWTPage() {
             dangerouslySetInnerHTML={{ __html: data.misi }}
           />
 
-         <h3 className="text-xl font-bold text-gray-900 mt-10 mb-2">Pencapaian</h3>
-            {data.pencapaians && data.pencapaians.length > 0 ? (
-            <ol className="list-decimal list-outside pl-8 text-justify leading-relaxed text-gray-800 space-y-2">
+         {data.pencapaians && data.pencapaians.length > 0 && (
+            <>
+                <h3 className="text-xl font-bold text-gray-900 mt-10 mb-2">Pencapaian</h3>
+                <ol className="list-decimal list-outside pl-8 text-justify leading-relaxed text-gray-800 space-y-2">
                 {data.pencapaians.map((item) => (
-                <li key={item.id}>
+                    <li key={item.id}>
                     {item.judul}
                     {item.gambar && (
-                    <div className="mt-2">
+                        <div className="mt-2">
                         <img
-                        src={item.gambar}
-                        alt={item.judul}
-                        className="w-full max-w-xs rounded"
+                            src={item.gambar}
+                            alt={item.judul}
+                            className="w-full max-w-xs rounded"
                         />
-                    </div>
+                        </div>
                     )}
-                </li>
+                    </li>
                 ))}
-            </ol>
-            ) : (
-            <div className="pl-1 text-gray-900">
-                <Minus />
-            </div>
+                </ol>
+            </>
             )}
         </div>
       </div>

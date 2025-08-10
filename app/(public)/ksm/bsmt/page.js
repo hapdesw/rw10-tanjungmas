@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 import { Quote } from "lucide-react";
-import { Minus } from 'lucide-react'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -56,29 +55,27 @@ export default async function ProfilBSMTPage() {
             dangerouslySetInnerHTML={{ __html: data.misi }}
           />
 
-         <h3 className="text-xl font-bold text-gray-900 mt-10 mb-2">Pencapaian</h3>
-            {data.pencapaians && data.pencapaians.length > 0 ? (
+         {data.pencapaians && data.pencapaians.length > 0 && (
+        <>
+            <h3 className="text-xl font-bold text-gray-900 mt-10 mb-2">Pencapaian</h3>
             <ol className="list-decimal list-outside pl-8 text-justify leading-relaxed text-gray-800 space-y-2">
-                {data.pencapaians.map((item) => (
+            {data.pencapaians.map((item) => (
                 <li key={item.id}>
-                    {item.judul}
-                    {item.gambar && (
+                {item.judul}
+                {item.gambar && (
                     <div className="mt-2">
-                        <img
+                    <img
                         src={item.gambar}
                         alt={item.judul}
                         className="w-full max-w-xs rounded"
-                        />
+                    />
                     </div>
-                    )}
+                )}
                 </li>
-                ))}
+            ))}
             </ol>
-            ) : (
-            <div className="pl-1 text-gray-900">
-                <Minus />
-            </div>
-            )}
+        </>
+        )}
         </div>
       </div>
     </section>
