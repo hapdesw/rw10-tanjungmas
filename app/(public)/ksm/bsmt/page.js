@@ -6,11 +6,11 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-export default async function ProfilRW10Page() {
+export default async function ProfilBSMTPage() {
   const { data, error } = await supabase
     .from('lembagas')
     .select('*, pencapaians(*)')
-    .eq('id', 1)
+    .eq('id', 2)
     .maybeSingle();
 
   if (error) {
@@ -25,22 +25,22 @@ export default async function ProfilRW10Page() {
             Profil {data.nama}
           </h2>
 
-          <div className="max-w-screen-xl mx-auto px-4 pb-2 md:pb-5">
+          <div className="max-w-md mx-auto px-4 pb-2 md:pb-5">
             <img
-              src="/images/berani berubah untuk berubah-laptop.png"
-              alt="Header Desktop"
+              src="/images/bsmt.jpg"
+              alt="Kantor BSMT"
               className="hidden md:block w-full object-cover rounded-xl"
             />
             <img
-              src="/images/berani berubah untuk berubah-hp.png"
-              alt="Header Mobile"
+              src="/images/bsmt.jpg"
+              alt="Kantor BSMT"
               className="block md:hidden w-full object-cover rounded-xl"
             />
           </div>
 
-          <p className="text-justify leading-relaxed text-gray-800" dangerouslySetInnerHTML={{ __html: data.deskripsi }} />
+          <p className="text-justify leading-relaxed text-gray-800 pt-5" dangerouslySetInnerHTML={{ __html: data.deskripsi }} />
 
-          <h3 className="text-xl font-bold text-gray-900 mt-10 mb-2">Visi</h3>
+            <h3 className="text-xl font-bold text-gray-900 mt-10 mb-2">Visi</h3>
             <div className="relative p-6 pt-8 pb-8 border-l-4 border-[#184D3B] bg-[#f7f6ee] rounded-md">
                 <Quote className="absolute top-2 left-2 w-5 h-5 text-[#184D3B]" />
                 <p className="text-justify font-bold leading-relaxed text-gray-800">
@@ -55,9 +55,11 @@ export default async function ProfilRW10Page() {
             dangerouslySetInnerHTML={{ __html: data.misi }}
           />
 
-         <h3 className="text-xl font-bold text-gray-900 mt-10 mb-2">Pencapaian</h3>
+         {data.pencapaians && data.pencapaians.length > 0 && (
+        <>
+            <h3 className="text-xl font-bold text-gray-900 mt-10 mb-2">Pencapaian</h3>
             <ol className="list-decimal list-outside pl-8 text-justify leading-relaxed text-gray-800 space-y-2">
-            {data.pencapaians?.map((item) => (
+            {data.pencapaians.map((item) => (
                 <li key={item.id}>
                 {item.judul}
                 {item.gambar && (
@@ -72,6 +74,8 @@ export default async function ProfilRW10Page() {
                 </li>
             ))}
             </ol>
+        </>
+        )}
         </div>
       </div>
     </section>
