@@ -27,12 +27,12 @@ export default async function ProfilBSMTPage() {
 
           <div className="max-w-md mx-auto px-4 pb-2 md:pb-5">
             <img
-              src="/images/ctkt.jpg"
+              src="/images/ctkt.JPG"
               alt="CTKT"
               className="hidden md:block w-full object-cover rounded-xl"
             />
             <img
-              src="/images/ctkt.jpg"
+              src="/images/ctkt.JPG"
               alt="CTKT"
               className="block md:hidden w-full object-cover rounded-xl"
             />
