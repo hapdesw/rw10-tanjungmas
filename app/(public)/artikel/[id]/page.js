@@ -6,6 +6,7 @@ import Link from 'next/link'
 export async function generateMetadata({ params }) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/artikel/${params.id}`);
+    next: { revalidate: 60 }
     
     if (!res.ok) {
       return {
@@ -13,9 +14,7 @@ export async function generateMetadata({ params }) {
         description: 'Artikel tidak ditemukan di RW 10 Tanjung Mas'
       }
     }
-
     const artikel = await res.json();
-
     return {
       title: artikel.judul,
       description: artikel.isi.substring(0, 160),
@@ -39,12 +38,18 @@ export default async function ArtikelDetail({ params }) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/artikel/${params.id}`);
     
+    // Tambahkan logging untuk debugging
+    console.log('Response status:', res.status);
+    console.log('Response headers:', [...res.headers.entries()]);
+    
     if (!res.ok) {
+      console.log('Response not OK, returning not found');
       return notFound();
     }
-
     artikel = await res.json();
+    console.log('Artikel data:', artikel); // Periksa data yang diterima
   } catch (error) {
+    console.error('Fetch error:', error);
     return notFound();
   }
 
@@ -81,25 +86,29 @@ export default async function ArtikelDetail({ params }) {
             </ol>
           </nav>
 
-          {/* Judul Artikel */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-4 text-center">{artikel.judul}</h1>
+          {/* Judul Artikel - Responsif untuk Mobile */}
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 text-center leading-tight">
+            {artikel.judul}
+          </h1>
 
           {/* Meta Info */}
-          <div className="flex items-center justify-center mb-6 text-sm text-gray-500">
-            <span>Oleh: {artikel.users?.nama || 'Admin'}</span>
-            <span className="mx-2">•</span>
-            <span>
-              {new Date(artikel.created_at).toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-              })}
-            </span>
+          <div className="flex flex-col sm:flex-row items-center justify-center mb-6 text-sm text-gray-500">
+            <div className="flex items-center">
+              <span>Oleh: {artikel.users?.nama || 'Admin'}</span>
+              <span className="mx-2">•</span>
+              <span>
+                {new Date(artikel.created_at).toLocaleDateString('id-ID', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric'
+                })}
+              </span>
+            </div>
             {artikel.lembagas && (
-              <>
-                <span className="mx-2">•</span>
-                <span>{artikel.lembagas.nama}</span>
-              </>
+              <div className="flex items-center mt-1 sm:mt-0">
+                <span className="mx-2 hidden sm:inline">•</span>
+                <span className="text-center sm:text-left">{artikel.lembagas.nama}</span>
+              </div>
             )}
           </div>
 
@@ -119,7 +128,7 @@ export default async function ArtikelDetail({ params }) {
 
           {/* Konten Artikel */}
           <div 
-            className="prose max-w-none"
+            className="prose prose-sm sm:prose max-w-none"
             dangerouslySetInnerHTML={{ __html: artikel.isi }} 
           />
         </div>

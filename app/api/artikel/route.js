@@ -1,4 +1,4 @@
-// app/api/artikel/[id]/route.js
+// app/api/artikel/route.js
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
@@ -6,9 +6,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-export async function GET(request, { params }) {
-  const { id } = params;
-
+export async function GET() {
   try {
     const { data: artikel, error } = await supabase
       .from('artikels')
@@ -24,25 +22,14 @@ export async function GET(request, { params }) {
         users (nama),
         lembagas (nama)
       `)
-      .eq('id', id)
-      .single();
+      .order('created_at', { ascending: false });
 
     if (error) {
       console.error('Error Supabase:', error);
       throw error;
     }
 
-    if (!artikel) {
-      return new Response(
-        JSON.stringify({ error: "Artikel tidak ditemukan" }),
-        { 
-          status: 404,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    return new Response(JSON.stringify(artikel), {
+    return new Response(JSON.stringify(artikel || []), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
