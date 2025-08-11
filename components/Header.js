@@ -17,12 +17,12 @@ export default function Header() {
   const pathname = usePathname()
   const [isKsmOpen, setIsKsmOpen] = useState(false)
   const [isProdukOpen, setIsProdukOpen] = useState(false)
-  const [isNavOpen, setIsNavOpen] = useState(false) // State untuk toggle navbar
+  const [isNavOpen, setIsNavOpen] = useState(false)
 
   const closeAll = () => {
     setIsKsmOpen(false)
     setIsProdukOpen(false)
-    setIsNavOpen(false) // Menutup navbar collapse
+    setIsNavOpen(false)
   }
 
   return (
@@ -38,18 +38,34 @@ export default function Header() {
             RW 10 Tanjung Mas
           </span>
         </NavbarBrand>
-
-        <div className="flex items-center justify-center gap-2 lg:gap-4 lg:order-2">
-          <Button
-            pill
-            className="text-sm px-3 py-1.5 lg:px-4 lg:py-2 bg-[#184D3B] text-white"
-          >
-            <Link href="/login">Login Admin</Link>
-          </Button>
+        <div className="flex items-center lg:order-2">
+          {/* Tombol Login hanya tampil di desktop */}
+          <div className="hidden lg:block">
+            <Button
+              pill
+              className="text-sm px-3 py-1.5 lg:px-4 lg:py-2 bg-[#184D3B] text-white"
+            >
+              <Link href="/login">Login Admin</Link>
+            </Button>
+          </div>
           <NavbarToggle onClick={() => setIsNavOpen(!isNavOpen)} />
         </div>
 
         <NavbarCollapse className={isNavOpen ? 'block' : 'hidden'}>
+
+          {/* Tombol Login untuk mobile - versi lebih pendek */}
+            <div className="lg:hidden mb-3">
+                <Button
+                    pill
+                    size="md" // Menggunakan size xs untuk lebih kecil
+                    className="text-sm px-4 py-2 bg-[#184D3B] text-white"
+                >
+                    <Link href="/login" className="w-full text-center">
+                    Login Admin
+                    </Link>
+                </Button>
+            </div>
+
           <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-6">
             <NavbarLink
               as={Link}
