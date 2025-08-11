@@ -18,7 +18,7 @@ export default async function ProdukBSMTPage() {
       <div className="max-w-screen-xl mx-auto px-4">
         <div className="bg-[#f7f6ee] rounded-xl shadow p-6 sm:p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
-            Produk Bank Sampah Mekar Tanjung
+            Produk Bank Sampah Mekar Tanjung 
           </h2>
 
           {produkBSMT.length === 0 ? (
