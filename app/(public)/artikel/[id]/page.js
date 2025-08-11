@@ -1,69 +1,56 @@
-import { createClient } from '@supabase/supabase-js'
+// app/artikel/[id]/page.js
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export async function generateMetadata({ params }) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  )
-  
-  const { data: artikel } = await supabase
-    .from('artikels')
-    .select('judul, isi')
-    .eq('id', params.id)
-    .single()
-
-  if (!artikel) {
-    return {
-      title: 'Artikel Tidak Ditemukan',
-      description: 'Artikel tidak ditemukan di RW 10 Tanjung Mas'
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/artikel/${params.id}`);
+    
+    if (!res.ok) {
+      return {
+        title: 'Artikel Tidak Ditemukan',
+        description: 'Artikel tidak ditemukan di RW 10 Tanjung Mas'
+      }
     }
-  }
 
-  return {
-    title: artikel.judul,
-    description: artikel.isi.substring(0, 160),
-    openGraph: {
+    const artikel = await res.json();
+
+    return {
       title: artikel.judul,
       description: artikel.isi.substring(0, 160),
-      images: artikel.gambar ? [{ url: artikel.gambar }] : undefined
+      openGraph: {
+        title: artikel.judul,
+        description: artikel.isi.substring(0, 160),
+        images: artikel.gambar ? [{ url: artikel.gambar }] : undefined
+      }
+    }
+  } catch (error) {
+    return {
+      title: 'Error',
+      description: 'Gagal memuat metadata artikel'
     }
   }
 }
 
 export default async function ArtikelDetail({ params }) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  )
+  let artikel = null;
+  
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/artikel/${params.id}`);
+    
+    if (!res.ok) {
+      return notFound();
+    }
 
-  const { data: artikel, error } = await supabase
-    .from('artikels')
-    .select(`
-      id,
-      judul,
-      isi,
-      gambar,
-      created_at,
-      updated_at,
-      user_id,
-      lembaga_id,
-      users (nama),
-      lembagas (nama)
-    `)
-    .eq('id', params.id)
-    .single()
-
-  if (error || !artikel) {
-    return notFound()
+    artikel = await res.json();
+  } catch (error) {
+    return notFound();
   }
 
   return (
     <section className="bg-[#f3f0e3] pt-4 pb-9">
       <div className="max-w-screen-xl mx-auto px-4">
-        {/* Container Utama (hanya satu container) */}
         <div className="bg-[#f7f6ee] rounded-xl shadow p-6 sm:p-8">
           {/* Breadcrumb */}
           <nav className="flex mb-6" aria-label="Breadcrumb">

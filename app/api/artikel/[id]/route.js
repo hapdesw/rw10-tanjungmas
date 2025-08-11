@@ -1,0 +1,56 @@
+// app/api/artikel/[id]/route.js
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+export async function GET(request, { params }) {
+  const { id } = params;
+
+  try {
+    const { data: artikel, error } = await supabase
+      .from('artikels')
+      .select(`
+        id,
+        judul,
+        isi,
+        gambar,
+        created_at,
+        updated_at,
+        user_id,
+        lembaga_id,
+        users (nama),
+        lembagas (nama)
+      `)
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('Error Supabase:', error);
+      throw error;
+    }
+
+    if (!artikel) {
+      return new Response(
+        JSON.stringify({ error: "Artikel tidak ditemukan" }),
+        { status: 404 }
+      );
+    }
+
+    return new Response(JSON.stringify(artikel), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    return new Response(
+      JSON.stringify({ 
+        error: "Gagal mengambil data artikel",
+        detail: error.message 
+      }),
+      { status: 500 }
+    );
+  }
+}
