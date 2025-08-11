@@ -3,40 +3,14 @@ import ProdukCard from "/components/ProdukCard";
 import { FaWhatsapp } from "react-icons/fa";
 
 export default async function ProdukBSMTPage() {
-  const lembagaId = 2; // Langsung gunakan nilai numerik
   let produkBSMT = [];
   
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_SITE_URL 
-      ? `${process.env.NEXT_PUBLIC_SITE_URL}/api/produk?lembaga_id=${lembagaId}`
-      : `/api/produk?lembaga_id=${lembagaId}`;
-
-    const res = await fetch(apiUrl, {
-      next: { revalidate: 3600 } // Revalidate setiap 1 jam
-    });
-    
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      throw new Error(
-        errorData.error || errorData.message || 'Gagal mengambil data produk'
-      );
-    }
-    
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/produk?lembaga_id=2`);
+    if (!res.ok) throw new Error('Gagal mengambil data produk');
     produkBSMT = await res.json();
   } catch (error) {
-    console.error('Fetch error:', error);
-    return (
-      <div className="p-4 text-red-600">
-        Error: {error.message}
-        <br />
-        <button 
-          onClick={() => window.location.reload()}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Coba Lagi
-        </button>
-      </div>
-    );
+    return <div className="p-4 text-red-600">Error: {error.message}</div>;
   }
 
  return (
