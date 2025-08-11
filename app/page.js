@@ -14,7 +14,7 @@ export default function Beranda() {
       <div className="bg-[#f3f0e3] py-8">
         <div className="max-w-screen-xl mx-auto px-4">
           <div className="bg-[#f7f6ee] rounded-xl shadow p-6 sm:p-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-8 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
               Artikel Terbaru
             </h2>
 
@@ -60,7 +60,7 @@ export default function Beranda() {
       <div className="bg-[#f3f0e3] py-3">
         <div className="max-w-screen-xl mx-auto px-4">
           <div className="bg-[#f7f6ee] rounded-xl shadow p-6 sm:p-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
               Video Profil RW 10
             </h2>
             <div className="w-full aspect-video rounded-lg overflow-hidden shadow">

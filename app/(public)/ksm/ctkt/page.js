@@ -1,19 +1,16 @@
-import { createClient } from '@supabase/supabase-js';
 import { Quote } from "lucide-react";
+import { FaMapMarkerAlt, FaWhatsapp, FaTiktok } from "react-icons/fa";
+import { FiInstagram, FiMail } from "react-icons/fi";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
-export default async function ProfilBSMTPage() {
-  const { data, error } = await supabase
-    .from('lembagas')
-    .select('*, pencapaians(*)')
-    .eq('id', 4)
-    .maybeSingle();
-
-  if (error) {
+export default async function ProfilCTKTPage() {
+  let data;
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/profil?id=4`, {
+        next: { revalidate: 3600 } // Revalidate setiap 1 jam
+    });
+    if (!res.ok) throw new Error('Gagal mengambil data');
+    data = await res.json();
+  } catch (error) {
     return <div className="p-4 text-red-600">Gagal mengambil data: {error.message}</div>;
   }
 
@@ -84,6 +81,71 @@ export default async function ProfilBSMTPage() {
             </ol>
         </>
         )}
+
+        {/* Kontak dan Google Maps Section */}
+          <div className="mt-12 pt-6 border-t border-gray-200">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Kontak</h2>
+            <div className="flex flex-col md:flex-row gap-8">
+              {/* Google Maps - Bagian Kiri */}
+              <div className="md:w-1/2">
+                <div className="bg-gray-200 rounded-lg overflow-hidden h-64 md:h-80">
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d990.1131724810795!2d110.42893382835489!3d-6.95580609956348!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e70f3f74b5fb1bd%3A0xbf33f3403e46711e!2sCTKT%20Divisi%20Kain!5e0!3m2!1sen!2sid!4v1754905642966!5m2!1sen!2sid"
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                  ></iframe>
+                </div>
+              </div>
+
+              {/* Informasi Kontak - Bagian Kanan */}
+              <div className="md:w-1/2">
+                <div className="bg-[#f3f0e3] p-6 rounded-lg shadow-sm space-y-4">
+                  <div>
+                    <h3 className="text-xl font-bold flex items-center gap-2 mb-3">
+                      <FaMapMarkerAlt className="text-red-500" />
+                      <span>Lokasi Kami</span>
+                    </h3>
+                    <p className="text-gray-800 mb-2">
+                      Jl. Usman Jannatin Gg. Armada 1 No.17, RT 01/RW 10, Tanjung Mas, Kec. Semarang Utara, Kota Semarang
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <a 
+                      href="https://wa.me/6285799799106" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-800 flex items-center gap-3 hover:text-green-600 transition-colors py-2"
+                    >
+                      <FaWhatsapp className="text-green-500 text-xl flex-shrink-0" />
+                      <span>+62 857-9979-9106 (Divisi Kain)</span>
+                    </a>
+                    <a 
+                      href="https://wa.me/6285842349974" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-800 flex items-center gap-3 hover:text-green-600 transition-colors py-2"
+                    >
+                      <FaWhatsapp className="text-green-500 text-xl flex-shrink-0" />
+                      <span>+62 858-4234-9974 (Divisi Kayu)</span>
+                    </a>
+                    <a 
+                      href="https://instagram.com/ctktdevisikain" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-800 flex items-center gap-3 hover:text-pink-600 transition-colors py-2"
+                    >
+                      <FiInstagram className="text-pink-500 text-xl flex-shrink-0" />
+                      <span>ctktdevisikain</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

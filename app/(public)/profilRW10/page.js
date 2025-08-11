@@ -1,19 +1,14 @@
-import { createClient } from '@supabase/supabase-js';
 import { Quote } from "lucide-react";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
 export default async function ProfilRW10Page() {
-  const { data, error } = await supabase
-    .from('lembagas')
-    .select('*, pencapaians(*)')
-    .eq('id', 1)
-    .maybeSingle();
-
-  if (error) {
+  let data;
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/profil?id=1`, {
+        next: { revalidate: 3600 } // Revalidate setiap 1 jam
+    });
+    if (!res.ok) throw new Error('Gagal mengambil data');
+    data = await res.json();
+  } catch (error) {
     return <div className="p-4 text-red-600">Gagal mengambil data: {error.message}</div>;
   }
 

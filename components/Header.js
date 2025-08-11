@@ -17,9 +17,13 @@ export default function Header() {
   const pathname = usePathname()
   const [isKsmOpen, setIsKsmOpen] = useState(false)
   const [isProdukOpen, setIsProdukOpen] = useState(false)
+  const [isNavOpen, setIsNavOpen] = useState(false) // State untuk toggle navbar
 
-  const closeDropdown = () => setIsKsmOpen(false)
-  const closeDropdownProduk = () => setIsProdukOpen(false)
+  const closeAll = () => {
+    setIsKsmOpen(false)
+    setIsProdukOpen(false)
+    setIsNavOpen(false) // Menutup navbar collapse
+  }
 
   return (
     <header className="shadow-md fixed top-0 left-0 w-full z-50">
@@ -40,12 +44,12 @@ export default function Header() {
             pill
             className="text-sm px-3 py-1.5 lg:px-4 lg:py-2 bg-[#184D3B] text-white"
           >
-            <Link href="/login">Log in</Link>
+            <Link href="/login">Login Admin</Link>
           </Button>
-          <NavbarToggle />
+          <NavbarToggle onClick={() => setIsNavOpen(!isNavOpen)} />
         </div>
 
-        <NavbarCollapse>
+        <NavbarCollapse className={isNavOpen ? 'block' : 'hidden'}>
           <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-6">
             <NavbarLink
               as={Link}
@@ -55,6 +59,7 @@ export default function Header() {
                   ? 'text-[#184D3B] font-bold underline underline-offset-4'
                   : 'text-gray-700'
               }`}
+              onClick={closeAll}
             >
               Beranda
             </NavbarLink>
@@ -67,6 +72,7 @@ export default function Header() {
                   ? 'text-[#184D3B] font-bold underline underline-offset-4'
                   : 'text-gray-700'
               }`}
+              onClick={closeAll}
             >
               Profil
             </NavbarLink>
@@ -100,7 +106,7 @@ export default function Header() {
                             ? 'text-[#184D3B] font-bold'
                             : 'text-gray-800'
                         }`}
-                        onClick={closeDropdown}
+                        onClick={closeAll}
                       >
                         BSMT
                       </Link>
@@ -113,7 +119,7 @@ export default function Header() {
                             ? 'text-[#184D3B] font-bold'
                             : 'text-gray-800'
                         }`}
-                        onClick={closeDropdown}
+                        onClick={closeAll}
                       >
                         KWT
                       </Link>
@@ -126,7 +132,7 @@ export default function Header() {
                             ? 'text-[#184D3B] font-bold'
                             : 'text-gray-800'
                         }`}
-                        onClick={closeDropdown}
+                        onClick={closeAll}
                       >
                         CTKT
                       </Link>
@@ -165,7 +171,7 @@ export default function Header() {
                             ? 'text-[#184D3B] font-bold'
                             : 'text-gray-800'
                         }`}
-                        onClick={closeDropdownProduk}
+                        onClick={closeAll}
                       >
                         BSMT
                       </Link>
@@ -178,7 +184,7 @@ export default function Header() {
                             ? 'text-[#184D3B] font-bold'
                             : 'text-gray-800'
                         }`}
-                        onClick={closeDropdownProduk}
+                        onClick={closeAll}
                       >
                         KWT
                       </Link>
@@ -191,7 +197,7 @@ export default function Header() {
                             ? 'text-[#184D3B] font-bold'
                             : 'text-gray-800'
                         }`}
-                        onClick={closeDropdownProduk}
+                        onClick={closeAll}
                       >
                         CTKT
                       </Link>
