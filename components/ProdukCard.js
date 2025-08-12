@@ -20,7 +20,7 @@ export default function ProdukCard({ produk }) {
       {/* Bagian Teks (tidak berubah) */}
       <div className="p-4">
         <h3 className="text-lg font-semibold mb-2 text-gray-900">{produk.nama}</h3>
-        <p className="text-sm text-gray-700 mb-3 line-clamp-6">
+        <p className="text-sm text-gray-700 mb-3 line-clamp-10">
           {produk.deskripsi}
         </p>
       </div>
