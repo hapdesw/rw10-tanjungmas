@@ -50,7 +50,7 @@ async function getArtikel(page = 1, limit = 6) {
   }
 }
 
-export default async function ArtikelPage({ searchParams }) {
+export default async function KelolaArtikelPage({ searchParams }) {
   const currentPage = Number(searchParams?.page) || 1;
   const limit = 6;
   

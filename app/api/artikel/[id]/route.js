@@ -21,7 +21,7 @@ export async function GET(request, { params }) {
         updated_at,
         user_id,
         lembaga_id,
-        users (nama),
+        profiles:user_id (nama)
         lembagas (nama)
       `)
       .eq('id', id)

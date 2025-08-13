@@ -94,7 +94,7 @@ export default async function ArtikelDetail({ params }) {
           {/* Meta Info */}
           <div className="flex flex-col sm:flex-row items-center justify-center mb-6 text-sm text-gray-500">
             <div className="flex items-center">
-              <span>Oleh: {artikel.users?.nama || 'Admin'}</span>
+              <span>Oleh: {artikel.profiles?.nama || 'Admin'}</span>
               <span className="mx-2">•</span>
               <span>
                 {new Date(artikel.created_at).toLocaleDateString('id-ID', {
