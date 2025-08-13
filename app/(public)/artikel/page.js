@@ -37,7 +37,7 @@ export default async function ArtikelPage() {
 
   return (
     <section className="bg-[#f3f0e3] py-8">
-      <div className="max-w-screen-xl mx-auto px-4">
+      <div className="max-w-screen-xl mx-auto">
         <div className="bg-[#fbfaf6] rounded-xl shadow p-6 sm:p-8">
           {/* Header */}
           <div className="mb-8">

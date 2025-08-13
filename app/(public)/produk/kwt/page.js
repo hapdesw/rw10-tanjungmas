@@ -15,7 +15,7 @@ export default async function ProdukKWTPage() {
 
  return (
     <section className="bg-[#f3f0e3] pt-4 pb-9">
-      <div className="max-w-screen-xl mx-auto px-4">
+      <div className="max-w-screen-xl mx-auto">
         <div className="bg-[#f7f6ee] rounded-xl shadow p-6 sm:p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Produk KWT Agro Tanjung

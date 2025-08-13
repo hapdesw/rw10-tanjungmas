@@ -55,7 +55,7 @@ export default async function ArtikelDetail({ params }) {
 
   return (
     <section className="bg-[#f3f0e3] pt-4 pb-9">
-      <div className="max-w-screen-xl mx-auto px-4">
+      <div className="max-w-screen-xl mx-auto">
         <div className="bg-[#f7f6ee] rounded-xl shadow p-6 sm:p-8">
           {/* Breadcrumb */}
           <nav className="flex mb-6" aria-label="Breadcrumb">

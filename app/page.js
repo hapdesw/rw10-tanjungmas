@@ -46,7 +46,7 @@ export default async function Beranda() {
   return (
     <section className="bg-[#f3f0e3] pt-3 pb-5">
       {/* Hero Section */}
-      <div className="max-w-screen-xl mx-auto px-4">
+      <div className="max-w-screen-xl mx-auto">
         <Image
           src="/images/1000153634.jpg"
           alt="Foto RW 10"
@@ -59,8 +59,8 @@ export default async function Beranda() {
 
       {/* Artikel Section */}
         <div className="bg-[#f3f0e3] py-8">
-        <div className="max-w-screen-xl mx-auto px-4">
-            <div className="bg-[#fbfaf6] rounded-xl shadow p-6 sm:p-8">
+        <div className="max-w-screen-xl mx-auto">
+            <div className="bg-[#f7f6ee] rounded-xl shadow p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
                 Artikel Terbaru
             </h2>
@@ -136,7 +136,7 @@ export default async function Beranda() {
 
       {/* Video Section */}
       <div className="bg-[#f3f0e3] pt-0.5 pb-3">
-        <div className="max-w-screen-xl mx-auto px-4">
+        <div className="max-w-screen-xl mx-auto">
           <div className="bg-[#f7f6ee] rounded-xl shadow p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
               Video Profil RW 10
