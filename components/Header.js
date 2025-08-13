@@ -57,7 +57,7 @@ export default function Header() {
             <div className="lg:hidden mb-3">
                 <Button
                     pill
-                    size="md" // Menggunakan size xs untuk lebih kecil
+                    size="md" 
                     className="text-sm px-4 py-2 bg-[#184D3B] text-white"
                 >
                     <Link href="/login" className="w-full text-center">

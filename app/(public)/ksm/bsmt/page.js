@@ -113,7 +113,7 @@ export default async function ProfilBSMTPage() {
                       className="text-gray-800 flex items-center gap-3 hover:text-green-600 transition-colors py-2"
                     >
                       <FaWhatsapp className="text-green-500 text-xl flex-shrink-0" />
-                      <span>+62 857-9979-9106</span>
+                      <span>+62 853-2884-5576</span>
                     </a>
 
                     <a 

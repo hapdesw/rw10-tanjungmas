@@ -39,7 +39,7 @@ async function getArtikel() {
   }
 }
 
-export default async function Beranda() {
+export default async function AdminBeranda() {
   const artikel = await getArtikel();
 
   return (
