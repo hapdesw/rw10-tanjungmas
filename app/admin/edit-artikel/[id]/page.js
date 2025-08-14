@@ -12,8 +12,6 @@ export default async function EditArtikelPage({ params }) {
     .eq('id', params.id)
     .single();
 
-  console.log('Artikel data:', artikel); // Debug log
-
   if (error || !artikel) {
     console.error('Error fetching artikel:', error);
     return (

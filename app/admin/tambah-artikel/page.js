@@ -90,17 +90,6 @@ export default function TambahArtikelPage() {
               <h1 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h1>
               <p className="text-gray-600 mb-4">Anda harus login untuk mengakses halaman ini.</p>
               
-              {/* Debug info */}
-              <div className="mt-8 p-4 bg-gray-100 rounded-lg text-left text-sm">
-                <h3 className="font-bold mb-2">Debug Info:</h3>
-                <pre className="whitespace-pre-wrap">{JSON.stringify(debugInfo, null, 2)}</pre>
-                <button 
-                  onClick={testAPI}
-                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Test API Endpoint
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -116,16 +105,6 @@ export default function TambahArtikelPage() {
             <h1 className="text-3xl font-bold text-[#184D3B] mb-2">Tambah Artikel</h1>
             <p className="text-gray-600">Buat artikel baru untuk lembaga Anda</p>
             
-            {/* Debug info untuk logged in user */}
-            <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm">
-              <strong>Debug:</strong> User ID: {user.id}, Lembaga ID: {lembagaId}
-              <button 
-                onClick={testAPI}
-                className="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
-              >
-                Test API
-              </button>
-            </div>
             
             <div className="mt-4">
               <label htmlFor="lembaga-select" className="block text-sm font-medium text-gray-700 mb-2">
