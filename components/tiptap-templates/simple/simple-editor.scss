@@ -1,10 +1,9 @@
-// styles/simple-editor-custom.scss
 .simple-editor-wrapper {
-  background-color: #fbfaf6; // sama seperti card daftar artikel
+  background-color: #fbfaf6;
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  color: #184D3B; // warna teks utama
+  color: #184D3B;
 
   .tiptap.ProseMirror {
     background-color: transparent;
@@ -20,19 +19,16 @@
       background-color: #3b82f6;
       color: white;
     }
-
     ::-moz-selection {
       background-color: #3b82f6;
       color: white;
     }
 
-    // Text selection dalam editor
     .ProseMirror-selectednode {
       outline: 2px solid #3b82f6;
       outline-offset: 2px;
     }
 
-    // Placeholder styling
     &.is-editor-empty::before {
       content: attr(data-placeholder);
       float: left;
@@ -41,19 +37,16 @@
       height: 0;
     }
 
-    // Focus states
     &:focus {
       outline: none;
       border-color: #3b82f6;
       box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
     }
 
-    // Active text selection highlight
     &:focus::selection {
       background-color: #1d4ed8;
       color: white;
     }
-
     &:focus::-moz-selection {
       background-color: #1d4ed8;
       color: white;
@@ -63,17 +56,7 @@
   h1, h2, h3, h4 {
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: #184D3B; // sama kayak tombol tambah artikel
-
-    ::selection {
-      background-color: #3b82f6;
-      color: white;
-    }
-
-    ::-moz-selection {
-      background-color: #3b82f6;
-      color: white;
-    }
+    color: #184D3B;
   }
 
   p {
@@ -88,20 +71,13 @@
       pointer-events: none;
       height: 0;
     }
-
-    ::selection {
-      background-color: #3b82f6;
-      color: white;
-    }
-
-    ::-moz-selection {
-      background-color: #3b82f6;
-      color: white;
-    }
   }
 
-  // Active states untuk toolbar buttons
+  // Toolbar styling
   .tiptap-toolbar {
+    z-index: 10;
+    background: #fbfaf6;
+
     .tiptap-button {
       &[data-active="true"], 
       &.is-active {
@@ -115,22 +91,10 @@
     }
   }
 
-  // Styling untuk marks yang aktif
-  strong, b {
-    font-weight: bold;
-  }
-
-  em, i {
-    font-style: italic;
-  }
-
-  s, strike {
-    text-decoration: line-through;
-  }
-
-  u {
-    text-decoration: underline;
-  }
+  strong, b { font-weight: bold; }
+  em, i { font-style: italic; }
+  s, strike { text-decoration: line-through; }
+  u { text-decoration: underline; }
 
   code {
     background-color: #f1f5f9;
@@ -156,16 +120,34 @@
     font-size: 0.75em;
   }
 
-  // Global selection untuk semua text dalam editor
   * {
     ::selection {
       background-color: #3b82f6 !important;
       color: white !important;
     }
-
     ::-moz-selection {
       background-color: #3b82f6 !important;
       color: white !important;
     }
   }
+}
+
+// 🔹 Tambahan fix untuk mobile
+@media (max-width: 768px) {
+  .simple-editor-wrapper {
+    padding: 1rem;
+
+    .tiptap-toolbar {
+      position: static !important; // Matikan sticky biar nggak loncat
+    }
+
+    .tiptap.ProseMirror {
+      min-height: 200px;
+    }
+  }
+}
+
+// 🔹 Pastikan toolbar tidak nutup input judul
+.tiptap-toolbar {
+  pointer-events: auto;
 }

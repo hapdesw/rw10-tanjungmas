@@ -1,78 +1,79 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { EditorContent, EditorContext, useEditor } from "@tiptap/react"
-import { useRouter } from 'next/navigation'
+import * as React from "react";
+import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 // --- Tiptap Core Extensions ---
-import { StarterKit } from "@tiptap/starter-kit"
-import { Image } from "@tiptap/extension-image"
-import { TaskItem, TaskList } from "@tiptap/extension-list"
-import { TextAlign } from "@tiptap/extension-text-align"
-import { Typography } from "@tiptap/extension-typography"
-import { Highlight } from "@tiptap/extension-highlight"
-import { Subscript } from "@tiptap/extension-subscript"
-import { Superscript } from "@tiptap/extension-superscript"
-import { Placeholder } from "@tiptap/extension-placeholder"
+import { StarterKit } from "@tiptap/starter-kit";
+import { Image as TiptapImage } from "@tiptap/extension-image";
+import { TaskItem, TaskList } from "@tiptap/extension-list";
+import { TextAlign } from "@tiptap/extension-text-align";
+import { Typography } from "@tiptap/extension-typography";
+import { Highlight } from "@tiptap/extension-highlight";
+import { Subscript } from "@tiptap/extension-subscript";
+import { Superscript } from "@tiptap/extension-superscript";
+import { Placeholder } from "@tiptap/extension-placeholder";
 
 // --- UI Primitives ---
-import { Button } from "@/components/tiptap-ui-primitive/button"
-import { Spacer } from "@/components/tiptap-ui-primitive/spacer"
+import { Button } from "@/components/tiptap-ui-primitive/button";
+import { Spacer } from "@/components/tiptap-ui-primitive/spacer";
 import {
   Toolbar,
   ToolbarGroup,
   ToolbarSeparator,
-} from "@/components/tiptap-ui-primitive/toolbar"
+} from "@/components/tiptap-ui-primitive/toolbar";
 
 // --- Tiptap Node ---
-import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node/image-upload-node-extension"
-import { HorizontalRule } from "@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node-extension"
-import "@/components/tiptap-node/blockquote-node/blockquote-node.scss"
-import "@/components/tiptap-node/code-block-node/code-block-node.scss"
-import "@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node.scss"
-import "@/components/tiptap-node/list-node/list-node.scss"
-import "@/components/tiptap-node/image-node/image-node.scss"
-import "@/components/tiptap-node/heading-node/heading-node.scss"
-import "@/components/tiptap-node/paragraph-node/paragraph-node.scss"
+import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node/image-upload-node-extension";
+import { HorizontalRule } from "@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node-extension";
+import "@/components/tiptap-node/blockquote-node/blockquote-node.scss";
+import "@/components/tiptap-node/code-block-node/code-block-node.scss";
+import "@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node.scss";
+import "@/components/tiptap-node/list-node/list-node.scss";
+import "@/components/tiptap-node/image-node/image-node.scss";
+import "@/components/tiptap-node/heading-node/heading-node.scss";
+import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
 
 // --- Tiptap UI ---
-import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu"
-import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button"
-import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu"
-import { BlockquoteButton } from "@/components/tiptap-ui/blockquote-button"
-import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button"
+import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
+import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button";
+import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
+import { BlockquoteButton } from "@/components/tiptap-ui/blockquote-button";
+import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button";
 import {
   ColorHighlightPopover,
   ColorHighlightPopoverContent,
   ColorHighlightPopoverButton,
-} from "@/components/tiptap-ui/color-highlight-popover"
+} from "@/components/tiptap-ui/color-highlight-popover";
 import {
   LinkPopover,
   LinkContent,
   LinkButton,
-} from "@/components/tiptap-ui/link-popover"
-import { MarkButton } from "@/components/tiptap-ui/mark-button"
-import { TextAlignButton } from "@/components/tiptap-ui/text-align-button"
-import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button"
+} from "@/components/tiptap-ui/link-popover";
+import { MarkButton } from "@/components/tiptap-ui/mark-button";
+import { TextAlignButton } from "@/components/tiptap-ui/text-align-button";
+import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
 
 // --- Icons ---
-import { ArrowLeftIcon } from "@/components/tiptap-icons/arrow-left-icon"
-import { HighlighterIcon } from "@/components/tiptap-icons/highlighter-icon"
-import { LinkIcon } from "@/components/tiptap-icons/link-icon"
+import { ArrowLeftIcon } from "@/components/tiptap-icons/arrow-left-icon";
+import { HighlighterIcon } from "@/components/tiptap-icons/highlighter-icon";
+import { LinkIcon } from "@/components/tiptap-icons/link-icon";
 
 // --- Hooks ---
-import { useIsMobile } from "@/hooks/use-mobile"
-import { useWindowSize } from "@/hooks/use-window-size"
-import { useCursorVisibility } from "@/hooks/use-cursor-visibility"
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useWindowSize } from "@/hooks/use-window-size";
+import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 
 // --- Components ---
-import { ThemeToggle } from "@/components/tiptap-templates/simple/theme-toggle"
+import { ThemeToggle } from "@/components/tiptap-templates/simple/theme-toggle";
 
 // --- Lib ---
-import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils"
+import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 
 // --- Styles ---
-import "@/components/tiptap-templates/simple/simple-editor.scss"
+import "@/components/tiptap-templates/simple/simple-editor.scss";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -158,18 +159,19 @@ const MobileToolbarContent = ({
   </>
 )
 
-export function SimpleEditor({ userId, lembagaId, initialData = {} }) {
-  const router = useRouter()
-  const isMobile = useIsMobile()
-  const { height } = useWindowSize()
-  const [mobileView, setMobileView] = React.useState("main")
-  const [title, setTitle] = React.useState(initialData?.title || "")
-  const [featuredImage, setFeaturedImage] = React.useState(null)
-  const [previewImage, setPreviewImage] = React.useState(initialData?.gambar || null)
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [error, setError] = React.useState(null)
-  const [success, setSuccess] = React.useState(false)
-  const toolbarRef = React.useRef(null)
+export function SimpleEditor({ userId, lembagaId, initialData = {}, articleId }) {
+  const router = useRouter();
+  const isMobile = useIsMobile();
+  const { height } = useWindowSize();
+  const [mobileView, setMobileView] = React.useState("main");
+  const [title, setTitle] = React.useState(initialData?.title || "");
+  const [featuredImage, setFeaturedImage] = React.useState(null);
+  const [previewImage, setPreviewImage] = React.useState(initialData?.gambar || null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState(null);
+  const [success, setSuccess] = React.useState(false);
+  const [isEditorReady, setIsEditorReady] = React.useState(false);
+  const toolbarRef = React.useRef(null);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -196,7 +198,7 @@ export function SimpleEditor({ userId, lembagaId, initialData = {} }) {
       TaskList,
       TaskItem.configure({ nested: true }),
       Highlight.configure({ multicolor: true }),
-      Image,
+      TiptapImage,
       Typography,
       Superscript,
       Subscript,
@@ -213,173 +215,162 @@ export function SimpleEditor({ userId, lembagaId, initialData = {} }) {
       }),
     ],
     content: initialData?.isi || '<p></p>',
-  })
-
+    onCreate: ({ editor }) => {
+      setIsEditorReady(true);
+    },
+  });
 
   const rect = useCursorVisibility({
     editor,
     overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
-  })
+  });
+
+  // Handle initial content setting - only run once when editor is ready
+  useEffect(() => {
+    if (editor && isEditorReady && initialData.isi && !editor.isEmpty) {
+      // Only set content if it's different from current content
+      const currentContent = editor.getHTML();
+      if (currentContent !== initialData.isi) {
+        editor.commands.setContent(initialData.isi);
+      }
+    }
+  }, [editor, isEditorReady, initialData.isi]);
+
+  // Handle title updates
+  useEffect(() => {
+    if (initialData?.title && initialData.title !== title) {
+      setTitle(initialData.title);
+    }
+  }, [initialData?.title]);
+
+  // Handle image updates
+  useEffect(() => {
+    if (initialData?.gambar && initialData.gambar !== previewImage) {
+      setPreviewImage(initialData.gambar);
+    }
+  }, [initialData?.gambar]);
 
   React.useEffect(() => {
     if (!isMobile && mobileView !== "main") {
-      setMobileView("main")
+      setMobileView("main");
     }
-  }, [isMobile, mobileView])
+  }, [isMobile, mobileView]);
 
   // Clear error after 10 seconds
   React.useEffect(() => {
     if (error) {
       const timer = setTimeout(() => {
-        setError(null)
-      }, 10000)
-      return () => clearTimeout(timer)
+        setError(null);
+      }, 10000);
+      return () => clearTimeout(timer);
     }
-  }, [error])
+  }, [error]);
 
   // Clear success message after 5 seconds
   React.useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
-        setSuccess(false)
-      }, 5000)
-      return () => clearTimeout(timer)
+        setSuccess(false);
+      }, 5000);
+      return () => clearTimeout(timer);
     }
-  }, [success])
+  }, [success]);
 
-  const handleSave = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
     if (!editor || !userId || !lembagaId) {
-      setError('Missing required information. Please refresh and try again.')
-      return
+      setError('Missing required information. Please refresh and try again.');
+      return;
     }
 
     if (!title?.trim()) {
-      setError('Judul artikel harus diisi')
-      return
+      setError('Judul artikel harus diisi');
+      return;
     }
 
     if (!editor.getText()?.trim()) {
-      setError('Konten artikel harus diisi')
-      return
+      setError('Konten artikel harus diisi');
+      return;
     }
     
-    setIsLoading(true)
-    setError(null)
-    setSuccess(false)
+    setIsLoading(true);
+    setError(null);
+    setSuccess(false);
     
     try {
-      const content = editor.getHTML()
-      const formData = new FormData()
+      const content = editor.getHTML();
+      const formData = new FormData();
       
-      formData.append('title', title.trim())
-      formData.append('content', content)
-      formData.append('userId', userId)
-      formData.append('lembagaId', lembagaId.toString())
+      formData.append('id', articleId); // Pastikan ID dikirim
+      formData.append('title', title.trim());
+      formData.append('content', content);
+      formData.append('currentImageUrl', previewImage || '');
       
       if (featuredImage) {
-        formData.append('featuredImage', featuredImage)
+        formData.append('featuredImage', featuredImage);
       }
 
-      // Determine if we're creating or updating
-      const isEditMode = !!initialData?.id
-      const apiUrl = isEditMode ? `/api/artikel/update` : `/api/artikel/create`
-      const method = isEditMode ? 'PUT' : 'POST'
-
-      // For edit mode, include the article ID and current image URL
-      if (isEditMode) {
-        formData.append('id', initialData.id)
-        formData.append('currentImageUrl', initialData.gambar || '')
-      }
-
-      const response = await fetch(apiUrl, {
-        method,
+      const response = await fetch('/api/artikel/update', {
+        method: 'PUT',
         body: formData,
-      })
-
-      const responseText = await response.text()
-      let result
-      
-      try {
-        result = JSON.parse(responseText)
-      } catch (parseError) {
-        console.error('JSON parse error:', parseError)
-        throw new Error(`Server returned invalid JSON response: ${responseText.substring(0, 200)}...`)
-      }
-
-      if (!response.ok) {
-        const errorMessage = result.error || result.details || `Server error: ${response.status}`
-        const errorDetails = result.details ? ` Details: ${Array.isArray(result.details) ? result.details.join(', ') : result.details}` : ''
-        throw new Error(`${errorMessage}${errorDetails}`)
-      }
-
-      if (!result.success) {
-        throw new Error(result.error || 'Unknown error occurred')
-      }
-
-      setSuccess(true)
-      
-      // Reset form if not in edit mode
-      if (!isEditMode) {
-        setTitle('')
-        setFeaturedImage(null)
-        setPreviewImage(null)
-        editor.commands.setContent('<p></p>')
-      }
-
-      setTimeout(() => {
-        router.push('/admin/kelola-artikel')
-      }, 2000)
-
-    } catch (err) {
-      console.error('Save error:', err)
-      setError(err.message || 'Terjadi kesalahan saat menyimpan artikel')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleFeaturedImageUpload = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      console.log('Selected file:', {
-        name: file.name,
-        size: file.size,
-        type: file.type
       });
 
+      const result = await response.json();
+      
+      if (response.ok) {
+        setSuccess(true);
+        alert('Artikel berhasil diperbarui!');
+        setTimeout(() => {
+          router.push('/admin/kelola-artikel');
+        }, 2000);
+      } else {
+        throw new Error(result.error || 'Gagal memperbarui artikel');
+      }
+    } catch (err) {
+      console.error('Update error:', err);
+      setError(err.message || 'Terjadi kesalahan saat memperbarui artikel');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFeaturedImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
       // Validasi ukuran file (max 10MB)
       if (file.size > 10 * 1024 * 1024) {
-        setError('Ukuran file terlalu besar. Maksimal 10MB.')
-        return
+        setError('Ukuran file terlalu besar. Maksimal 10MB.');
+        return;
       }
 
       // Validasi tipe file
       if (!file.type.startsWith('image/')) {
-        setError('File harus berupa gambar.')
-        return
+        setError('File harus berupa gambar.');
+        return;
       }
 
-      setFeaturedImage(file)
-      setError(null)
+      setFeaturedImage(file);
+      setError(null);
       
       // Create preview URL
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = (e) => {
-        setPreviewImage(e.target.result)
-      }
-      reader.readAsDataURL(file)
+        setPreviewImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const removeImage = () => {
-    setFeaturedImage(null)
-    setPreviewImage(null)
+    setFeaturedImage(null);
+    setPreviewImage(null);
     // Reset file input
-    const fileInput = document.getElementById('featured-image')
+    const fileInput = document.getElementById('featured-image');
     if (fileInput) {
-      fileInput.value = ''
+      fileInput.value = '';
     }
-  }
+  };
 
   return (
     <div className="simple-editor-wrapper">
@@ -464,7 +455,7 @@ export function SimpleEditor({ userId, lembagaId, initialData = {} }) {
                   className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer disabled:opacity-50"
                 >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
                   </svg>
                   Ganti Gambar
                 </label>
@@ -489,7 +480,7 @@ export function SimpleEditor({ userId, lembagaId, initialData = {} }) {
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 cursor-pointer disabled:opacity-50"
                 >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
                   </svg>
                   Pilih Gambar
                 </label>
@@ -534,7 +525,7 @@ export function SimpleEditor({ userId, lembagaId, initialData = {} }) {
       {/* Tombol Simpan */}
       <div className="flex justify-end">
         <button
-          onClick={handleSave}
+          onClick={handleSubmit}
           disabled={!title.trim() || !editor?.getText().trim() || isLoading}
           className="px-6 py-3 bg-[#184D3B] text-white rounded-lg hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium flex items-center gap-2"
         >
@@ -544,10 +535,9 @@ export function SimpleEditor({ userId, lembagaId, initialData = {} }) {
               <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
           )}
-          {isLoading ? 'Menyimpan...' : 'Simpan Artikel'}
+          {isLoading ? 'Menyimpan...' : 'Simpan Perubahan'}
         </button>
       </div>
     </div>
   );
 }
-export default SimpleEditor;

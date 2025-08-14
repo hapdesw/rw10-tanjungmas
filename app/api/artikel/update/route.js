@@ -1,3 +1,4 @@
+// app/api/artikel/update/route.js
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import cloudinary from '@/lib/cloudinary';
@@ -21,6 +22,20 @@ export async function PUT(request) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
+      );
+    }
+
+    // Cek apakah artikel ada
+    const { data: existingArticle, error: findError } = await supabase
+      .from('artikels')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (findError || !existingArticle) {
+      return NextResponse.json(
+        { error: 'Artikel tidak ditemukan' },
+        { status: 404 }
       );
     }
 
@@ -68,9 +83,11 @@ export async function PUT(request) {
 
     return NextResponse.json({
       success: true,
+      message: 'Artikel berhasil diperbarui',
       data: {
         id: data.id,
         title: data.judul,
+        content: data.isi,
         imageUrl: data.gambar
       }
     });
