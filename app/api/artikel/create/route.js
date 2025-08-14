@@ -18,7 +18,7 @@ export async function POST(request) {
   const requiredEnvVars = [
     'NEXT_PUBLIC_SUPABASE_URL',
     'SUPABASE_SERVICE_ROLE_KEY',
-    'CLOUDINARY_CLOUD_NAME',
+    'NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME',
     'CLOUDINARY_API_KEY',
     'CLOUDINARY_API_SECRET'
   ];
