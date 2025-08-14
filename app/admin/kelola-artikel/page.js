@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import ActionButtons from '@/components/KelolaArtikel'
 
 async function getArtikel(page = 1, limit = 6) {
   try {
@@ -60,10 +61,18 @@ export default async function KelolaArtikelPage({ searchParams }) {
     <section className="bg-[#f3f0e3] py-8">
       <div className="max-w-screen-xl mx-auto">
         <div className="bg-[#fbfaf6] rounded-xl shadow p-6 sm:p-8">
+          
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 text-center mb-2">Daftar Artikel</h1>
-            <p className="text-gray-600 text-center">Informasi terbaru dari RW 10 Tanjung Mas</p>
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Daftar Artikel</h1>
+            </div>
+            <Link
+              href="/admin/tambah-artikel"
+              className="bg-[#184D3B] text-white px-4 py-2 rounded-md hover:bg-[#145c46] transition"
+            >
+              + Tambah Artikel
+            </Link>
           </div>
 
           {/* Error Display */}
@@ -79,7 +88,7 @@ export default async function KelolaArtikelPage({ searchParams }) {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {articles.length > 0 ? (
               articles.map((artikel) => (
-                <div key={artikel.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <div key={artikel.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex flex-col">
                   {artikel.gambar && (
                     <div className="relative h-48">
                       <Image
@@ -91,7 +100,7 @@ export default async function KelolaArtikelPage({ searchParams }) {
                       />
                     </div>
                   )}
-                  <div className="p-4">
+                  <div className="p-4 flex flex-col flex-grow">
                     <div className="flex items-center text-sm text-gray-500 mb-2">
                       <span>{new Date(artikel.created_at).toLocaleDateString('id-ID')}</span>
                       <span className="mx-2">•</span>
@@ -99,17 +108,24 @@ export default async function KelolaArtikelPage({ searchParams }) {
                     </div>
                     <h2 className="text-xl font-semibold mb-2 line-clamp-2">{artikel.judul}</h2>
                     <p className="text-gray-600 mb-4 line-clamp-3">
-                      {artikel.isi ? artikel.isi.substring(0, 150) + '...' : 'Tidak ada preview...'}
+                    {artikel.isi
+                        ? artikel.isi.replace(/<[^>]+>/g, '').substring(0, 150) + '...'
+                        : 'Tidak ada preview...'}
                     </p>
-                    <Link
-                      href={`/artikel/${artikel.id}`}
-                      className="text-[#184D3B] font-medium hover:underline inline-flex items-center"
-                    >
-                      Baca selengkapnya
-                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
+                    <div className="mt-auto">
+                      <Link
+                        href={`/admin/kelola-artikel/${artikel.id}`}
+                        className="text-[#184D3B] font-medium hover:underline inline-flex items-center mr-4"
+                      >
+                        Baca selengkapnya
+                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+
+                      {/* Panggil komponen client */}
+                      <ActionButtons artikelId={artikel.id} />
+                    </div>
                   </div>
                 </div>
               ))
@@ -128,7 +144,7 @@ export default async function KelolaArtikelPage({ searchParams }) {
             <div className="flex justify-center mt-8">
               <div className="flex items-center gap-2">
                 <Link
-                  href={`/artikel?page=${Math.max(1, page - 1)}`}
+                  href={`/admin/kelola-artikel?page=${Math.max(1, page - 1)}`}
                   className={`px-4 py-2 rounded-md ${page === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-[#184D3B] hover:bg-gray-100'}`}
                   aria-disabled={page === 1}
                   tabIndex={page === 1 ? -1 : undefined}
@@ -146,7 +162,7 @@ export default async function KelolaArtikelPage({ searchParams }) {
                     pageNum > 0 && pageNum <= totalPages && (
                       <Link
                         key={pageNum}
-                        href={`/artikel?page=${pageNum}`}
+                        href={`/admin/kelola-artikel?page=${pageNum}`}
                         className={`px-4 py-2 rounded-md ${page === pageNum ? 'bg-[#184D3B] text-white' : 'text-[#184D3B] hover:bg-gray-100'}`}
                       >
                         {pageNum}
@@ -156,7 +172,7 @@ export default async function KelolaArtikelPage({ searchParams }) {
                 })}
                 
                 <Link
-                  href={`/artikel?page=${Math.min(totalPages, page + 1)}`}
+                  href={`/admin/kelola-artikel?page=${Math.min(totalPages, page + 1)}`}
                   className={`px-4 py-2 rounded-md ${page === totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-[#184D3B] hover:bg-gray-100'}`}
                   aria-disabled={page === totalPages}
                   tabIndex={page === totalPages ? -1 : undefined}

@@ -42,7 +42,7 @@ export default function AdminHeader() {
         className="border-gray-200 px-4 lg:px-10 py-2.5"
         style={{ backgroundColor: '#f3f0e3' }}
       >
-        <NavbarBrand href="/admin/kelolaartikel">
+        <NavbarBrand href="/admin/kelola-artikel">
           <span className="self-center text-lg font-semibold whitespace-nowrap text-[#184D3B]">
             Admin RW 10 Tanjung Mas
           </span>
@@ -80,9 +80,9 @@ export default function AdminHeader() {
           <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-6">
             <NavbarLink
               as={Link}
-              href="/admin/kelolaartikel" 
+              href="/admin/kelola-artikel" 
               className={`text-sm lg:text-base py-2 ${
-                pathname === '/admin/kelolaartikel'
+                pathname === '/admin/kelola-artikel'
                   ? 'text-[#184D3B] font-bold underline underline-offset-4'
                   : 'text-gray-700'
               }`}

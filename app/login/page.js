@@ -32,7 +32,7 @@ export default function LoginPage() {
       // Tunggu cookie sync
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        router.push('/admin/kelolaartikel');
+        router.push('/admin/kelola-artikel');
       }
 
     } catch (err) {
