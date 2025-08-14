@@ -11,27 +11,60 @@ const supabase = createClient(
 
 export default function TambahArtikelPage() {
   const [user, setUser] = useState(null)
-  const [lembagaId, setLembagaId] = useState(1) // Default ke 1 (RW10), bisa diubah sesuai kebutuhan
+  const [lembagaId, setLembagaId] = useState(1)
   const [loading, setLoading] = useState(true)
+  const [debugInfo, setDebugInfo] = useState({})
 
   useEffect(() => {
-    // Get current user
+    // Debug environment variables
+    setDebugInfo({
+      hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+      hasSupabaseKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30) + '...'
+    })
+
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-      setLoading(false)
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser()
+        console.log('Auth user result:', { user: user?.id, error })
+        setUser(user)
+      } catch (error) {
+        console.error('Error getting user:', error)
+      } finally {
+        setLoading(false)
+      }
     }
 
     getUser()
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('Auth state changed:', _event, session?.user?.id)
       setUser(session?.user ?? null)
       setLoading(false)
     })
 
     return () => subscription.unsubscribe()
   }, [])
+
+  // Test API endpoint
+  const testAPI = async () => {
+    try {
+      console.log('Testing API endpoint...')
+      const response = await fetch('/api/artikel/create', {
+        method: 'POST',
+        body: JSON.stringify({ test: true }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      console.log('Test response status:', response.status)
+      const text = await response.text()
+      console.log('Test response text:', text.substring(0, 200))
+    } catch (error) {
+      console.error('API test error:', error)
+    }
+  }
 
   if (loading) {
     return (
@@ -55,7 +88,19 @@ export default function TambahArtikelPage() {
           <div className="bg-[#fbfaf6] rounded-xl shadow-lg p-6 sm:p-8">
             <div className="text-center">
               <h1 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h1>
-              <p className="text-gray-600">Anda harus login untuk mengakses halaman ini.</p>
+              <p className="text-gray-600 mb-4">Anda harus login untuk mengakses halaman ini.</p>
+              
+              {/* Debug info */}
+              <div className="mt-8 p-4 bg-gray-100 rounded-lg text-left text-sm">
+                <h3 className="font-bold mb-2">Debug Info:</h3>
+                <pre className="whitespace-pre-wrap">{JSON.stringify(debugInfo, null, 2)}</pre>
+                <button 
+                  onClick={testAPI}
+                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  Test API Endpoint
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -71,7 +116,17 @@ export default function TambahArtikelPage() {
             <h1 className="text-3xl font-bold text-[#184D3B] mb-2">Tambah Artikel</h1>
             <p className="text-gray-600">Buat artikel baru untuk lembaga Anda</p>
             
-            {/* Dropdown untuk memilih lembaga */}
+            {/* Debug info untuk logged in user */}
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm">
+              <strong>Debug:</strong> User ID: {user.id}, Lembaga ID: {lembagaId}
+              <button 
+                onClick={testAPI}
+                className="ml-4 px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+              >
+                Test API
+              </button>
+            </div>
+            
             <div className="mt-4">
               <label htmlFor="lembaga-select" className="block text-sm font-medium text-gray-700 mb-2">
                 Pilih Lembaga

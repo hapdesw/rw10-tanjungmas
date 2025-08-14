@@ -160,6 +160,8 @@ const MobileToolbarContent = ({
 )
 
 export function SimpleEditor({ userId, lembagaId, initialData = {}, articleId }) {
+  console.log('SimpleEditor props:', { userId, lembagaId, initialData, articleId }); // Debug log
+  
   const router = useRouter();
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
@@ -225,30 +227,36 @@ export function SimpleEditor({ userId, lembagaId, initialData = {}, articleId })
     overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
   });
 
-  // Handle initial content setting - only run once when editor is ready
+  // Handle initial data - set semua initial data saat editor ready
   useEffect(() => {
-    if (editor && isEditorReady && initialData.isi && !editor.isEmpty) {
-      // Only set content if it's different from current content
-      const currentContent = editor.getHTML();
-      if (currentContent !== initialData.isi) {
-        editor.commands.setContent(initialData.isi);
+    if (editor && isEditorReady && initialData) {
+      console.log('Setting initial data:', initialData); // Debug log
+      
+      // Set title
+      if (initialData.title && initialData.title !== title) {
+        setTitle(initialData.title);
+      }
+      
+      // Set content
+      if (initialData.isi) {
+        const currentContent = editor.getHTML();
+        // Hanya set content jika berbeda dan bukan empty placeholder
+        if (currentContent !== initialData.isi && currentContent !== '<p></p>') {
+          console.log('Setting editor content:', initialData.isi);
+          editor.commands.setContent(initialData.isi, false);
+        } else if (currentContent === '<p></p>' && initialData.isi) {
+          console.log('Setting initial editor content:', initialData.isi);
+          editor.commands.setContent(initialData.isi, false);
+        }
+      }
+      
+      // Set image
+      if (initialData.gambar && initialData.gambar !== previewImage) {
+        console.log('Setting preview image:', initialData.gambar);
+        setPreviewImage(initialData.gambar);
       }
     }
-  }, [editor, isEditorReady, initialData.isi]);
-
-  // Handle title updates
-  useEffect(() => {
-    if (initialData?.title && initialData.title !== title) {
-      setTitle(initialData.title);
-    }
-  }, [initialData?.title]);
-
-  // Handle image updates
-  useEffect(() => {
-    if (initialData?.gambar && initialData.gambar !== previewImage) {
-      setPreviewImage(initialData.gambar);
-    }
-  }, [initialData?.gambar]);
+  }, [editor, isEditorReady, initialData]);
 
   React.useEffect(() => {
     if (!isMobile && mobileView !== "main") {
@@ -302,34 +310,88 @@ export function SimpleEditor({ userId, lembagaId, initialData = {}, articleId })
       const content = editor.getHTML();
       const formData = new FormData();
       
-      formData.append('id', articleId); // Pastikan ID dikirim
-      formData.append('title', title.trim());
-      formData.append('content', content);
-      formData.append('currentImageUrl', previewImage || '');
-      
-      if (featuredImage) {
-        formData.append('featuredImage', featuredImage);
-      }
+      if (articleId) {
+        // UPDATE mode
+        formData.append('id', articleId);
+        formData.append('title', title.trim());
+        formData.append('content', content);
+        formData.append('currentImageUrl', previewImage || '');
+        
+        if (featuredImage) {
+          formData.append('featuredImage', featuredImage);
+        }
 
-      const response = await fetch('/api/artikel/update', {
-        method: 'PUT',
-        body: formData,
-      });
+        console.log('Updating article:', articleId);
 
-      const result = await response.json();
-      
-      if (response.ok) {
-        setSuccess(true);
-        alert('Artikel berhasil diperbarui!');
-        setTimeout(() => {
-          router.push('/admin/kelola-artikel');
-        }, 2000);
+        const response = await fetch('/api/artikel/update', {
+          method: 'PUT',
+          body: formData,
+        });
+
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+          setSuccess(true);
+          alert('Artikel berhasil diperbarui!');
+          setTimeout(() => {
+            router.push('/admin/kelola-artikel');
+          }, 2000);
+        } else {
+          throw new Error(result.error || 'Gagal memperbarui artikel');
+        }
       } else {
-        throw new Error(result.error || 'Gagal memperbarui artikel');
+        // CREATE mode
+        formData.append('title', title.trim());
+        formData.append('content', content);
+        formData.append('userId', userId);
+        formData.append('lembagaId', lembagaId.toString());
+        
+        if (featuredImage) {
+          formData.append('featuredImage', featuredImage);
+        }
+
+        console.log('Creating new article...');
+
+        const response = await fetch('/api/artikel/create', {
+          method: 'POST',
+          body: formData,
+        });
+
+        // Debug response
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+        
+        if (!response.ok) {
+          const responseText = await response.text();
+          console.error('Response not ok:', response.status, responseText);
+          throw new Error(`HTTP ${response.status}: ${responseText}`);
+        }
+
+        let result;
+        try {
+          result = await response.json();
+        } catch (jsonError) {
+          const responseText = await response.text();
+          console.error('Failed to parse JSON:', jsonError);
+          console.error('Response text:', responseText);
+          throw new Error(`Server returned invalid JSON response: ${responseText.substring(0, 200)}...`);
+        }
+        
+        console.log('Create response:', result);
+
+        if (result.success) {
+          setSuccess(true);
+          alert('Artikel berhasil dibuat!');
+          setTimeout(() => {
+            router.push('/admin/kelola-artikel');
+          }, 2000);
+        } else {
+          throw new Error(result.error || 'Gagal membuat artikel');
+        }
       }
     } catch (err) {
-      console.error('Update error:', err);
-      setError(err.message || 'Terjadi kesalahan saat memperbarui artikel');
+      console.error('Submit error:', err);
+      setError(err.message || `Terjadi kesalahan saat ${articleId ? 'memperbarui' : 'membuat'} artikel`);
     } finally {
       setIsLoading(false);
     }
@@ -535,7 +597,7 @@ export function SimpleEditor({ userId, lembagaId, initialData = {}, articleId })
               <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
           )}
-          {isLoading ? 'Menyimpan...' : 'Simpan Perubahan'}
+          {isLoading ? (articleId ? 'Menyimpan...' : 'Membuat...') : (articleId ? 'Simpan Perubahan' : 'Buat Artikel')}
         </button>
       </div>
     </div>
